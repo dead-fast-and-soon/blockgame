@@ -15,6 +15,10 @@ const Vector2f Board::offset = sf::Vector2f(300, 100);
 
 Board::Board(int x, int y): size(x, y) {
 
+    block_grid = new bool*[x];
+    for(int i = 0; i < x; i++)
+        block_grid[i] = new bool[y]();
+
     int thickness = 2;
 
     // set rectangle sizes
@@ -43,6 +47,29 @@ Board::Board(int x, int y): size(x, y) {
     d.setPosition(offset + sf::Vector2f(0, thickness + size.y * BLOCK_SIZE));
     l.setPosition(offset + sf::Vector2f(-thickness, 0));
     r.setPosition(offset + sf::Vector2f(thickness + size.x * BLOCK_SIZE, 0));
+}
+
+
+void Board::fillPositions(vector<Vector2i> positions) {
+
+    for(auto pos: positions) {
+        block_grid[pos.x][pos.y] = true;
+    }
+}
+
+void inline Board::fillPosition(Vector2i pos) {
+    block_grid[pos.x][pos.y] = true;
+}
+
+void Board::unfillPositions(vector<Vector2i> positions) {
+
+    for(auto pos: positions) {
+        block_grid[pos.x][pos.y] = false;
+    }
+}
+
+void inline Board::unfillPosition(Vector2i pos) {
+    block_grid[pos.x][pos.y] = false;
 }
 
 
@@ -130,7 +157,7 @@ bool inline Board::checkPosition(int x, int y) {
     if(x < 0 or x >= size.x) return false;
     if(y < 0 or y >= size.y) return false;
 
-    // check block collisions
+    if(block_grid[x][y]) return false;
 
     return true;
 }
@@ -154,6 +181,7 @@ void Board::moveBlocks(int x, int y) {
 
     if(checkMovement(x, y)) {
         for(auto block: controlled_blocks)
+
             block->move(x, y);
     }
 }

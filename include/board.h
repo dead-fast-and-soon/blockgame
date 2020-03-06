@@ -9,6 +9,7 @@
 #include "block.h"
 
 using std::vector;
+using std::tuple;
 
 using sf::Vector2i;
 using sf::RenderTarget;
@@ -23,10 +24,20 @@ private:
     Vector2i size; // size of the board
     sf::RectangleShape u, d, l, r; // outline shapes
 
+    bool** block_grid;
+
     Block* origin_block = nullptr; // block to rotate around
 
     vector<Block*> controlled_blocks; // blocks controlled by the player
     vector<Block*> blocks; // static blocks
+
+    void fillPositions(vector<Vector2i>);
+
+    void fillPosition(Vector2i);
+
+    void unfillPositions(vector<Vector2i>);
+
+    void unfillPosition(Vector2i);
 
 public:
 
